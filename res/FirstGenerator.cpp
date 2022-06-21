@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include "../config/SymbolCollection.h"
 
 //判断该符号是否为非终结符
@@ -59,8 +60,8 @@ static std::vector<char> FindAllFirstSymbolic(std::vector<char> &Data) {
 	start\nE->Tb\nT->a\nend\n
 */
 //构造推到映射关系 E—>TE' =>  ‘E': {'T''E''}<'char','char[]'>
-static std::map<char, std::vector<char>>StructMapper(const char* Grammar) {
-	std::map<char, std::vector<char>> maps;
+static std::unordered_map<char, std::vector<char>>StructMapper(const char* Grammar) {
+	std::unordered_map<char, std::vector<char>> maps;
 	//设置文法最大长度
 	int index = 0;
 	int size = 100;
@@ -102,7 +103,7 @@ static std::map<char, std::vector<char>>StructMapper(const char* Grammar) {
 					Grammar += 1;
 					index += 1;
 				}
-				maps.insert(std::map<char, std::vector<char>>::value_type(UnTerminator, temp));
+				maps.insert(std::unordered_map<char, std::vector<char>>::value_type(UnTerminator, temp));
 			}
 			else {
 				std::cout << "Error: 文法错误 -> 前放置为非终结符 或 文法格式错误";
@@ -145,7 +146,7 @@ static std::map<char, std::vector<char>>StructMapper(const char* Grammar) {
 }
 
 //递归方式寻找该非终极符的First集合，结果保存在result中
-static void CreateFirst(char Symbolic, std::map<char, std::vector<char>> maps, std::vector<char>& result) {
+static void CreateFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps, std::vector<char>& result) {
 	//出口：左侧第一个符号为终结符
 	if (JudgeTerminator(Symbolic)) {
 		result.push_back(Symbolic);
@@ -155,7 +156,7 @@ static void CreateFirst(char Symbolic, std::map<char, std::vector<char>> maps, s
 	std::vector<char> temp = FindAllFirstSymbolic(maps[Symbolic]);
 	//递归调用将所有左侧第一个终结符加入result集合
 	for (auto x : temp) {
-		if(1 == maps.count(x))
+		if(1 == maps.count(x)||JudgeTerminator(x))
 			CreateFirst(x, maps, result);
 		else {
 			std::cout << "Error: 文法非法 存在非终结符无法推出终结符的情况'\n'";
@@ -166,9 +167,9 @@ static void CreateFirst(char Symbolic, std::map<char, std::vector<char>> maps, s
 }
 
 void TraversalAllUnTerminator(char *data) {
-	std::map<char, std::vector<char>> maps = StructMapper(data);
+	std::unordered_map<char, std::vector<char>> maps = StructMapper(data);
 	std::vector<char> result;
-	for (std::map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
+	for (std::unordered_map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
 		CreateFirst(iter->first, maps, result);
 		//Vector 去重
 		std::set<int>s(result.begin(), result.end());
@@ -184,7 +185,7 @@ void TraversalAllUnTerminator(char *data) {
 
 //由于使用的map结构为有序结构，故结果按A，B，C，D排序
 int main() {
-	char test[40] = {'s','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','\n','A','-','>','b','|','c','b','|','D','\n','D','-','>','%','\n','C','-','>','F','\n','e','n','d','\n'};
+	char test[40] = {'s','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','\n','A','-','>','b','|','c','b','|','D','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
 	/*
 	Test Data
 	*StructMapper(test);
