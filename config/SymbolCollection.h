@@ -6,5 +6,5 @@ const std::set<char> Terminator{
 };
 
 const std::set<char> UnTerminator{
-	'A','B','C','D','E'
+	'A','B','C','D','E','F'
 };

@@ -144,8 +144,8 @@ static std::map<char, std::vector<char>>StructMapper(const char* Grammar) {
 	return maps;
 }
 
-//递归方式寻找非终结符的第一个终结符
-static void FindFirstTerminator(char Symbolic, std::map<char, std::vector<char>> maps, std::vector<char>& result) {
+//递归方式寻找该非终极符的First集合，结果保存在result中
+static void CreateFirst(char Symbolic, std::map<char, std::vector<char>> maps, std::vector<char>& result) {
 	//出口：左侧第一个符号为终结符
 	if (JudgeTerminator(Symbolic)) {
 		result.push_back(Symbolic);
@@ -154,18 +154,45 @@ static void FindFirstTerminator(char Symbolic, std::map<char, std::vector<char>>
 	//找到此非终结符对应的所有左侧首字符集合
 	std::vector<char> temp = FindAllFirstSymbolic(maps[Symbolic]);
 	//递归调用将所有左侧第一个终结符加入result集合
-	for (auto x : temp) FindFirstTerminator(x, maps, result);
-
+	for (auto x : temp) {
+		if(1 == maps.count(x))
+			CreateFirst(x, maps, result);
+		else {
+			std::cout << "Error: 文法非法 存在非终结符无法推出终结符的情况'\n'";
+			__debugbreak();
+		}
+	}
 	return;
-}	
+}
 
+void TraversalAllUnTerminator(char *data) {
+	std::map<char, std::vector<char>> maps = StructMapper(data);
+	std::vector<char> result;
+	for (std::map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
+		CreateFirst(iter->first, maps, result);
+		//Vector 去重
+		std::set<int>s(result.begin(), result.end());
+		result.assign(s.begin(), s.end());
+		std::cout << iter->first << ":";
+		for (auto x : result) std::cout << x ;
+		result.clear();
+		std::cout << std::endl;
+	}
+
+}
+
+
+//由于使用的map结构为有序结构，故结果按A，B，C，D排序
 int main() {
-	char test[30] = {'s','t','a','r','t','\n','E','-','>','a','|','A','\n','A','-','>','b','|','c','\n','e','n','d','\n'};
-	char test1[1] = { '\n' };
-	StructMapper(test);
+	char test[40] = {'s','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','\n','A','-','>','b','|','c','b','|','D','\n','D','-','>','%','\n','C','-','>','F','\n','e','n','d','\n'};
+	/*
+	Test Data
+	*StructMapper(test);
 	std::vector<char> data = { 's','a','|','b','a','|','d' };
 	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
 	std::vector<char> result;
-	FindFirstTerminator('E', StructMapper(test), result);
+	CreateFirst('E', StructMapper(test), result);
 	for (auto x : result) std::cout << x << std::endl;
+	*/
+	TraversalAllUnTerminator(test);
 }
