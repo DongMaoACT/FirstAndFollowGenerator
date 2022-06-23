@@ -18,9 +18,24 @@
     <ClCompile Include="res\FirstGenerator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="res\GrammarExtraction.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="until\SymbolCollection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="res\Follwgenerator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config\SymbolCollection.h">
+    <ClInclude Include="until\SymbolCollection.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="res\GramarExtraction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="res\FirstGenerator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
