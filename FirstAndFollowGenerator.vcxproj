@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="res\Follwgenerator.cpp" />
+    <ClCompile Include="until\OpenFile.cpp" />
     <ClCompile Include="until\SymbolCollection.cpp" />
     <ClCompile Include="res\FirstGenerator.cpp" />
     <ClCompile Include="res\GrammarExtraction.cpp" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="res\FirstGenerator.h" />
     <ClInclude Include="res\GramarExtraction.h" />
+    <ClInclude Include="until\OpenFile.h" />
     <ClInclude Include="until\SymbolCollection.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

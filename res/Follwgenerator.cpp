@@ -111,6 +111,7 @@ static std::unordered_map<char, std::vector<char>> CreateFollow(std::unordered_m
 		//符合规则三的符号集合用规则三的流水线并入Follw集map中
 		temp.insert(temp.end(), tempthrid.begin(), tempthrid.end());
 		FollowStatus.insert(std::unordered_map<char, std::vector<char>>::value_type(iter->first, temp));
+
 		temp.clear();
 	}
 	return FollowStatus;
@@ -129,5 +130,8 @@ int main() {
 	*/
 	std::unordered_map<char, std::vector<char>> maps = StructMapper(test);
 	std::unordered_map<char, std::vector<char>> result = CreateFollow(maps);
+
+	
+	
 	std::cout << "1" << std::endl;
 }
