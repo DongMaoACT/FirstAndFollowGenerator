@@ -57,6 +57,9 @@ void CreateFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps
 
 // 生成Firsit集合
 void TraversalAllUnTerminator(char *data) {
+	std::string sdata = XX();
+	//char c[200];
+	strcpy(data, sdata.c_str());
 	std::unordered_map<char, std::vector<char>> maps = StructMapper(data);
 	std::vector<char> result;
 	for (std::unordered_map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
@@ -73,17 +76,16 @@ void TraversalAllUnTerminator(char *data) {
 
 
 //由于使用的map结构为有序结构，故结果按A，B，C，D排序
-/*int main() {
+int main() {
 	char test[40] = {'s','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','\n','A','-','>','b','|','c','b','|','D','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
 	
-	Test Data
+	/*Test Data
 	*StructMapper(test);
 	std::vector<char> data = { 's','a','|','b','a','|','d' };
 	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
 	std::vector<char> result;
 	CreateFirst('E', StructMapper(test), result);
-	for (auto x : result) std::cout << x << std::endl;
+	for (auto x : result) std::cout << x << std::endl;*/
 	
 	TraversalAllUnTerminator(test);
 }
-*/

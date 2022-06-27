@@ -117,21 +117,21 @@ static std::unordered_map<char, std::vector<char>> CreateFollow(std::unordered_m
 	return FollowStatus;
 }
 
-int main() {
-	char test[50] = { 's','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','c','|','A','|','D','\n','A','-','>','b','|','c','b','|','D','|','D','d','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
-	/*
-	Test Data
-	*StructMapper(test);
-	std::vector<char> data = { 's','a','|','b','a','|','d' };
-	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
-	std::vector<char> result;
-	CreateFirst('E', StructMapper(test), result);
-	for (auto x : result) std::cout << x << std::endl;
-	*/
-	std::unordered_map<char, std::vector<char>> maps = StructMapper(test);
-	std::unordered_map<char, std::vector<char>> result = CreateFollow(maps);
-
-	
-	
-	std::cout << "1" << std::endl;
-}
+//int main() {
+//	char test[50] = { 's','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','c','|','A','|','D','\n','A','-','>','b','|','c','b','|','D','|','D','d','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
+//	/*
+//	Test Data
+//	*StructMapper(test);
+//	std::vector<char> data = { 's','a','|','b','a','|','d' };
+//	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
+//	std::vector<char> result;
+//	CreateFirst('E', StructMapper(test), result);
+//	for (auto x : result) std::cout << x << std::endl;
+//	*/
+//	std::unordered_map<char, std::vector<char>> maps = StructMapper(test);
+//	std::unordered_map<char, std::vector<char>> result = CreateFollow(maps);
+//
+//	
+//	
+//	std::cout << "1" << std::endl;
+//}
