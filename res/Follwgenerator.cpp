@@ -110,6 +110,11 @@ static std::unordered_map<char, std::vector<char>> CreateFollow(std::unordered_m
 
 		//符合规则三的符号集合用规则三的流水线并入Follw集map中
 		temp.insert(temp.end(), tempthrid.begin(), tempthrid.end());
+
+		//去重
+		std::set<int>s(temp.begin(), temp.end());
+		temp.assign(s.begin(), s.end());
+
 		FollowStatus.insert(std::unordered_map<char, std::vector<char>>::value_type(iter->first, temp));
 
 		temp.clear();
@@ -117,21 +122,26 @@ static std::unordered_map<char, std::vector<char>> CreateFollow(std::unordered_m
 	return FollowStatus;
 }
 
-//int main() {
-//	char test[50] = { 's','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','c','|','A','|','D','\n','A','-','>','b','|','c','b','|','D','|','D','d','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
-//	/*
-//	Test Data
-//	*StructMapper(test);
-//	std::vector<char> data = { 's','a','|','b','a','|','d' };
-//	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
-//	std::vector<char> result;
-//	CreateFirst('E', StructMapper(test), result);
-//	for (auto x : result) std::cout << x << std::endl;
-//	*/
-//	std::unordered_map<char, std::vector<char>> maps = StructMapper(test);
-//	std::unordered_map<char, std::vector<char>> result = CreateFollow(maps);
-//
-//	
-//	
-//	std::cout << "1" << std::endl;
-//}
+int main() {
+	char test[50] = { 's','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','c','|','A','|','D','\n','A','-','>','b','|','c','b','|','D','|','D','d','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
+	/*
+	Test Data
+	*StructMapper(test);
+	std::vector<char> data = { 's','a','|','b','a','|','d' };
+	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
+	std::vector<char> result;
+	CreateFirst('E', StructMapper(test), result);
+	for (auto x : result) std::cout << x << std::endl;
+	*/
+	std::unordered_map<char, std::vector<char>> maps = StructMapper(test);
+	std::unordered_map<char, std::vector<char>> result = CreateFollow(maps);
+	for (std::unordered_map<char, std::vector<char>>::iterator iter = result.begin(); iter != result.end();iter++) {
+		std::cout << iter->first << " : { ";
+		for (auto x : iter->second) {
+			std::cout << x << " ";
+		}
+		std::cout << "}" << std::endl;
+	}
+	
+	std::cout << "1" << std::endl;
+}
