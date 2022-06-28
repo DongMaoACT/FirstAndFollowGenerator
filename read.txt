@@ -1,0 +1,6 @@
+start\n
+E->A\n
+E->B\n
+B->D|d\n
+D->%\n
+end\n
