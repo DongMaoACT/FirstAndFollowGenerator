@@ -32,6 +32,41 @@ static std::vector<char> FindAllFirstSymbolic(std::vector<char> &Data) {
 	return symbolic;
 }
 
+//将所有右推导分块A->Ba|D 分为Ba,D放到两(n)个vector中
+std::vector<std::vector<char>> GetAllDerivation(const std::vector<char> &Data) {
+	std::vector<std::vector<char>> result;
+	result.push_back({});
+	for (auto x : Data) {
+		if (x == '|') {
+			result.push_back({});
+			continue;
+		} 
+		result.back().push_back(x);
+	}
+	return result;
+}
+
+void CreateChildFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps, std::vector<std::vector<char>> ChildData, std::vector<char>& result) {
+	bool flag = 0;
+	if (JudgeTerminator(Symbolic)) {
+		result.push_back(Symbolic);
+		return;
+	}
+	for (auto child : ChildData) {
+		for (auto x : child) {
+			if (1 == maps.count(x) || JudgeTerminator(x)) {
+				CreateChildFirst(x,maps,GetAllDerivation(maps[x]), result);
+				// 当
+				if (result.back() != '%' ) 
+					break;
+				else if(x != child.back())
+					result.pop_back();
+			}
+		}
+		
+	}
+
+}
 
 
 //递归方式寻找该非终极符的First集合，结果保存在result中
@@ -45,6 +80,7 @@ void CreateFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps
 	std::vector<char> temp = FindAllFirstSymbolic(maps[Symbolic]);
 	//递归调用将所有左侧第一个终结符加入result集合
 	for (auto x : temp) {
+		
 		if(1 == maps.count(x)||JudgeTerminator(x))
 			CreateFirst(x, maps, result);
 		else {
@@ -57,13 +93,11 @@ void CreateFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps
 
 // 生成Firsit集合
 void TraversalAllUnTerminator(char *data) {
-	std::string sdata = XX();
-	//char c[200];
-	strcpy(data, sdata.c_str());
 	std::unordered_map<char, std::vector<char>> maps = StructMapper(data);
 	std::vector<char> result;
 	for (std::unordered_map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
-		CreateFirst(iter->first, maps, result);
+		//CreateFirst(iter->first, maps, result);
+		CreateChildFirst(iter->first, maps, GetAllDerivation(iter->second), result);
 		//Vector 去重
 		std::set<int>s(result.begin(), result.end());
 		result.assign(s.begin(), s.end());
@@ -74,18 +108,31 @@ void TraversalAllUnTerminator(char *data) {
 	}
 }
 
+std::unordered_map<char, std::vector<char>> CreateAllFirst(const char* InData) {
+	std::unordered_map<char, std::vector<char>> result;
+	std::unordered_map<char, std::vector<char>> maps = StructMapper(InData);
+	for (std::unordered_map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
+		std::vector<char> temp;
+		CreateChildFirst(iter->first, maps, GetAllDerivation(iter->second), temp);
+		std::set<char>s(temp.begin(), temp.end());
+		temp.assign(s.begin(), s.end());
+		result.insert(std::unordered_map<char, std::vector<char>>::value_type(iter->first, temp));
+	}
+	return result;
+}
 
 //由于使用的map结构为有序结构，故结果按A，B，C，D排序
-int main() {
-	char test[40] = {'s','t','a','r','t','\n','E','-','>','a','c','|','%','|','A','\n','A','-','>','b','|','c','b','|','D','\n','D','-','>','%','\n','C','-','>','a','\n','e','n','d','\n'};
-	
-	/*Test Data
-	*StructMapper(test);
-	std::vector<char> data = { 's','a','|','b','a','|','d' };
-	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
-	std::vector<char> result;
-	CreateFirst('E', StructMapper(test), result);
-	for (auto x : result) std::cout << x << std::endl;*/
-	
-	TraversalAllUnTerminator(test);
-}
+//int main() {
+	//char test[100] = { 's','t','a','r','t','\n','A','-','>','B','C','c','|','g','D','b','\n','B','-','>','b','C','D','E','|','%','\n','C','-','>','D','a','b','|','c','a','\n','D','-','>','d','D','|','%','\n','E','-','>','g','A','f','|','c','\n','e','n','d','\n'};
+//	
+//	/*Test Data
+//	*StructMapper(test);
+//	std::vector<char> data = { 's','a','|','b','a','|','d' };
+//	std::cout << FindAllFirstSymbolic(data).at(1) << std::endl;
+//	std::vector<char> result;
+//	CreateFirst('E', StructMapper(test), result);
+//	for (auto x : result) std::cout << x << std::endl;
+//	*/
+//	
+//	CreateAllFirst(test);
+//}

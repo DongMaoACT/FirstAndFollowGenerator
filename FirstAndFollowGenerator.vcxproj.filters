@@ -24,10 +24,13 @@
     <ClCompile Include="until\SymbolCollection.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="res\Follwgenerator.cpp">
+    <ClCompile Include="res\FollowGenerator.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="until\OpenFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="res\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,13 +38,16 @@
     <ClInclude Include="until\SymbolCollection.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="res\GramarExtraction.h">
+    <ClInclude Include="res\GrammarExtraction.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="res\FirstGenerator.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="until\OpenFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="res\FollowGenerator.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

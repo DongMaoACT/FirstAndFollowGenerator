@@ -2,7 +2,7 @@
 #include <set>
 
 const std::set<char> Terminator{
-	'a','b','c','d','e','%'
+	'a','b','c','d','e','%','g','f'
 };
 
 const std::set<char> UnTerminator{

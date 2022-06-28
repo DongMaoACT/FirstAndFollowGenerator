@@ -1,5 +1,5 @@
 #include "../until/SymbolCollection.h"
-#include "GramarExtraction.h"
+#include "GrammarExtraction.h"
 
 /*
 	文法模型
