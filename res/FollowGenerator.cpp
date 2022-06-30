@@ -101,7 +101,7 @@ static std::unordered_map<char, std::vector<char>> CreateAllRuleOneAndTwo(std::u
 		std::vector<char> temp, tempsecond, tempthrid;
 		//规则一：将 $ 放到follow（S）中，其中S是文法的开始符号。
 		// 如果非终结符为开始符号E则将#加入
-		if (iter == maps.begin()) {
+		if ((*iter).first == 'S') {
 			temp.push_back('#');
 		}
 		std::vector<std::vector<char>> FirstList;

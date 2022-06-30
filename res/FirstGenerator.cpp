@@ -32,19 +32,6 @@ static std::vector<char> FindAllFirstSymbolic(std::vector<char> &Data) {
 	return symbolic;
 }
 
-//将所有右推导分块A->Ba|D 分为Ba,D放到两(n)个vector中
-std::vector<std::vector<char>> GetAllDerivation(const std::vector<char> &Data) {
-	std::vector<std::vector<char>> result;
-	result.push_back({});
-	for (auto x : Data) {
-		if (x == '|') {
-			result.push_back({});
-			continue;
-		} 
-		result.back().push_back(x);
-	}
-	return result;
-}
 
 void CreateChildFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps, std::vector<std::vector<char>> ChildData, std::vector<char>& result) {
 	bool flag = 0;
@@ -56,7 +43,7 @@ void CreateChildFirst(char Symbolic, std::unordered_map<char, std::vector<char>>
 		for (auto x : child) {
 			if (1 == maps.count(x) || JudgeTerminator(x)) {
 				CreateChildFirst(x,maps,GetAllDerivation(maps[x]), result);
-				// 当
+				
 				if (result.back() != '%' ) 
 					break;
 				else if(x != child.back())
@@ -111,6 +98,13 @@ void TraversalAllUnTerminator(char *data) {
 std::unordered_map<char, std::vector<char>> CreateAllFirst(const char* InData) {
 	std::unordered_map<char, std::vector<char>> result;
 	std::unordered_map<char, std::vector<char>> maps = StructMapper(InData);
+	for (std::unordered_map<char, std::vector<char>>::iterator iter = maps.begin(); iter != maps.end(); iter++) {
+						std::cout << iter->first << "->";
+						for (auto x : iter->second) {
+							std::cout << x << " ";
+						}
+						std::cout << std::endl;
+	}
 	for (std::unordered_map<char, std::vector<char>>::const_iterator iter = maps.begin(); iter != maps.end(); ++iter) {
 		std::vector<char> temp;
 		CreateChildFirst(iter->first, maps, GetAllDerivation(iter->second), temp);
@@ -123,7 +117,7 @@ std::unordered_map<char, std::vector<char>> CreateAllFirst(const char* InData) {
 
 //由于使用的map结构为有序结构，故结果按A，B，C，D排序
 //int main() {
-	//char test[100] = { 's','t','a','r','t','\n','A','-','>','B','C','c','|','g','D','b','\n','B','-','>','b','C','D','E','|','%','\n','C','-','>','D','a','b','|','c','a','\n','D','-','>','d','D','|','%','\n','E','-','>','g','A','f','|','c','\n','e','n','d','\n'};
+//	char test[100] = { 's','t','a','r','t','\n','A','-','>','B','C','c','|','g','D','b','\n','B','-','>','b','C','D','E','|','%','\n','C','-','>','D','a','b','|','c','a','\n','D','-','>','d','D','|','%','\n','E','-','>','g','A','f','|','c','\n','e','n','d','\n'};
 //	
 //	/*Test Data
 //	*StructMapper(test);

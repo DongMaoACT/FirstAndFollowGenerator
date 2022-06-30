@@ -1,6 +1,134 @@
 #include "../until/SymbolCollection.h"
 #include "GrammarExtraction.h"
 
+//将所有右推导分块A->Ba|D 分为Ba,D放到两(n)个vector中
+std::vector<std::vector<char>> GetAllDerivation(const std::vector<char>& Data) {
+	std::vector<std::vector<char>> result;
+	result.push_back({});
+	for (auto x : Data) {
+		if (x == '|') {
+			result.push_back({});
+			continue;
+		}
+		result.back().push_back(x);
+	}
+	return result;
+}
+
+static char FindUnUseUnTerminator(std::unordered_map<char, std::vector<char>> maps) {
+	for (auto x : UnTerminator) {
+		if (maps.count(x) == 1) {
+			continue;
+		}
+		else {
+			return x;
+		}
+	}
+	return '@';
+}
+
+std::unordered_map<char, std::vector<char>> DeleteLeftRecursion(std::unordered_map<char, std::vector<char>> maps) {
+	for (std::unordered_map<char, std::vector<char>>::iterator iter = maps.begin(); iter != maps.end(); iter++) {
+		std::vector<std::vector<char>> DataChild = GetAllDerivation(iter->second);
+		bool flag = false;
+		char Ctemp = FindUnUseUnTerminator(maps);
+		std::vector<char> temp;
+		std::vector<std::vector<char>>::iterator vter = DataChild.begin();
+		while (vter != DataChild.end()) {
+			if ((*vter).at(0) == iter->first) {
+				(*vter).push_back(Ctemp);
+				(*vter).erase((*vter).begin());
+				temp.insert(temp.end(), (*vter).begin(), (*vter).end());
+				temp.push_back('|');
+				vter = DataChild.erase(vter);
+				flag = true;
+			}
+			else {
+				++vter;
+			}
+		}
+		if (flag) {
+			temp.pop_back();
+			maps.insert(std::unordered_map<char, std::vector<char>>::value_type(Ctemp, temp));
+			temp.clear();
+			for (auto x : DataChild) {
+				x.push_back(Ctemp);
+				temp.insert(temp.end(), x.begin(), x.end());
+				temp.push_back('|');
+			}
+			temp.pop_back();
+			maps[iter->first] = temp;
+		}
+	}
+	for (std::unordered_map<char, std::vector<char>>::iterator iter = maps.begin(); iter != maps.end(); iter++) {
+		bool flag = false;
+		std::vector<char> temp;
+		std::vector<std::vector<char>> tempresult;
+		char Ctemp = FindUnUseUnTerminator(maps);
+		std::vector<std::vector<char>> DataChild = GetAllDerivation(iter->second);
+		std::vector<std::vector<char>>::iterator vter = DataChild.begin();
+		while (vter != DataChild.end()) {
+			if (JudgeUnTerminator((*vter).at(0)) && (*vter).at(0) != iter->first) {
+				char tempchar = (*vter).at(0);
+				(*vter).erase((*vter).begin());
+				std::vector<std::vector<char>> tempChild = GetAllDerivation(maps[tempchar]);
+				temp = *vter;
+				for (auto x : tempChild) {
+					if (x.at(0) != '%') {
+						x.insert(x.end(), temp.begin(), temp.end());
+						tempresult.push_back(x);
+					}
+				}
+				vter = DataChild.erase(vter);
+				DataChild.insert(DataChild.end(), tempresult.begin(), tempresult.end());
+				tempresult.clear();
+				vter = DataChild.begin();
+				flag = true;
+			}
+			else {
+				vter++;
+			}
+		}
+		if (flag) {
+			temp.clear();
+			for (auto x : DataChild) {
+				temp.insert(temp.end(), x.begin(), x.end());
+				temp.push_back('|');
+			}
+			temp.pop_back();
+			vter = DataChild.begin();
+			temp.clear();
+			while (vter != DataChild.end()) {
+				if ((*vter).at(0) == iter->first) {
+					(*vter).push_back(Ctemp);
+					(*vter).erase((*vter).begin());
+					temp.insert(temp.end(), (*vter).begin(), (*vter).end());
+					temp.push_back('|');
+					vter = DataChild.erase(vter);
+					flag = false;
+				}
+				else {
+					++vter;
+				}
+			}
+			if (!flag) {
+				temp.pop_back();
+				maps.insert(std::unordered_map<char, std::vector<char>>::value_type(Ctemp, temp));
+				temp.clear();
+				for (auto x : DataChild) {
+					x.push_back(Ctemp);
+					temp.insert(temp.end(), x.begin(), x.end());
+					temp.push_back('|');
+				}
+				temp.pop_back();
+				maps[iter->first] = temp;
+			}
+
+		}
+	}
+
+	return maps;
+}
 /*
 	文法模型
 	start\n
@@ -92,5 +220,21 @@ std::unordered_map<char, std::vector<char>>StructMapper(const char* Grammar) {
 		std::cout << "Error: 文法非法 文法后 无'\n'";
 		__debugbreak();
 	}
-	return maps;
+
+	return DeleteLeftRecursion(maps);
 }
+
+
+
+
+
+//S:Sa|b -> S:bX X->aX|%
+
+//int main() {
+//
+//	char test1[100] = { 's','t','a','r','t','\n','S','-','>','S','a','|','S','b','|','c','|','A','\n','A','-','>','B','d','\n','B','-','>','S','d','|','%','\n','e','n','d','\n' };
+//	char test[100] = { 's','t','a','r','t','\n','S','-','>','A','a','|','S','b','|','c','\n','A','-','>','B','C','c','|','g','D','B','\n','B','-','>','S','b','C','D','E','|','%','\n','C','-','>','D','a','B','|','c','a','\n','D','-','>','d','D','|','%','\n','E','-','>','g','A','f','|','c','\n','e','n','d','\n'};
+//	std::unordered_map<char, std::vector<char>> maps = StructMapper(test1);
+//	std::unordered_map<char, std::vector<char>> temp = DeleteLeftRecursion(maps);
+//	int i;
+//}

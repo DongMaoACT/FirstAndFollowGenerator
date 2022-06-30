@@ -8,12 +8,11 @@ std::string XX() {
 	}
 	int fileSize = GetFileSize(hOpenFile, NULL);
 	char* pBuffer = (char*)malloc(fileSize);
-	std::string rBuffer = "start\\n";
+	std::string rBuffer = "start";
 	DWORD RSize = 0;
 	std::deque<char> first;
-	std::deque<char> second;
-	char xx[] = "end\\n";
-	char yy[] = "start\\n";
+	char xx[] = "end\n";
+	char yy[] = "start\n";
 	ReadFile(hOpenFile, pBuffer, fileSize, &RSize, NULL);
 	/*for (int i = 0; i < sizeof(yy); i++)
 	{
@@ -35,17 +34,16 @@ std::string XX() {
 			else
 			{
 				first.clear();
-				rBuffer += "\\n";
+				rBuffer += "\n";
 				i = i + 3;
 			}
-
 		}
 		else {
 			first.push_back(pBuffer[i]);
 			rBuffer += pBuffer[i];
 		}
 	}
-	rBuffer += "end\\n";
+	rBuffer += "end\n";
 	free(pBuffer);
 	CloseHandle(hOpenFile);
 	return rBuffer;

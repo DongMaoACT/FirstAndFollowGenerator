@@ -9,7 +9,7 @@ static std::vector<char> FindAllFirstSymbolic(std::vector<char>& Data);
 
 void CreateFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps, std::vector<char>& result);
 
-std::vector<std::vector<char>> GetAllDerivation(const std::vector<char>& Data);
+//std::vector<std::vector<char>> GetAllDerivation(const std::vector<char>& Data);
 
 void CreateChildFirst(char Symbolic, std::unordered_map<char, std::vector<char>> maps, std::vector<std::vector<char>> ChildData, std::vector<char>& result);
 

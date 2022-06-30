@@ -1,6 +1,8 @@
 start\n
-E->A\n
-E->B\n
-B->D|d\n
-D->%\n
+S->Sa|Sb|c|A\n
+A->BCc|gDB\n
+B->SbCDE|%\n
+C->DaB|ca\n
+D->dD|%\n
+E->gAf|c\n
 end\n
